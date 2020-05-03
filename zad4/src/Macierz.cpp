@@ -1,44 +1,25 @@
-/*
-
 #include "Macierz.hh"
 
+template class Macierz<double,5>;
+template std::istream & operator >> (std::istream & Strm, Macierz<double, 5> & k);
+template std::ostream & operator << (std::ostream & Strm, const Macierz<double, 5> & k);
+template class Macierz<LZespolona,5>;
+template std::istream & operator >> (std::istream & Strm, Macierz<LZespolona, 5> & k);
+template std::ostream & operator << (std::ostream & Strm, const Macierz<LZespolona, 5> & k);
+
 // Konstruktor zerujacy Macierz
-Macierz::Macierz(){
+template <class TYP, int ROZMIAR>
+Macierz<TYP, ROZMIAR>::Macierz(){
     for(int i = 0; i < ROZMIAR; i++)
         for(int j = 0; j < ROZMIAR; j++){
             tab[i][j] = 0;
         }
 }
 
-// Konstruktor wstawiajacy kolenje argumenty do elementow macierzy
-Macierz::Macierz(double a1, double a2, double a3, double b1, double b2, double b3, double c1, double c2, double c3){
-
-    tab[0][0] = a1, tab[0][1] = a2, tab[0][2] = a3;
-    tab[1][0] = b1, tab[1][1] = b2, tab[1][2] = b3;
-    tab[2][0] = c1, tab[2][1] = c2, tab[2][2] = c3;
-}
-
-// Konstruktor wstawiajacy wektory z argumentow do wierszy macierzy
-Macierz::Macierz(Wektor W1, Wektor W2, Wektor W3){
-
-    tab[0] = W1;
-    tab[1] = W2;
-    tab[2] = W3;
-}
-
-// Metoda obliczajaca wyznacznk macierzy z pola klasy (metoda Laplace'a)
-// Zwraca wyznacznik
-double Macierz::WyznacznikLaplace() const{
-
-    return 
-    (tab[0][0]*((tab[1][1]*tab[2][2])-(tab[1][2]*tab[2][1]))
-    -tab[1][0]*((tab[0][1]*tab[2][2])-(tab[0][2]*tab[2][1]))    // Wzor metody Laplace'a
-    +tab[2][0]*((tab[0][1]*tab[1][2])-(tab[0][2]*tab[1][1])));
-}
-
 // Metoda transponujaca macierz z pola klasy
 // Zwraca  nowo utworzona macierz (transponowana z pola klasy)
-const Macierz Macierz::Transpozycja() const{
+template <class TYP, int ROZMIAR>
+const Macierz<TYP, ROZMIAR> Macierz<TYP, ROZMIAR>::Transpozycja() const{
 
     Macierz MacTr;
 
@@ -50,46 +31,91 @@ const Macierz Macierz::Transpozycja() const{
     return MacTr;
 }
 
-// Metoda oblicza odwrotnosc macierzy z pola klasy
-// Zwraca nowo utworzona macierz (odwrotna do macierzy z pola)
-const Macierz Macierz::Odwrotnosc() const{
 
-    double det = WyznacznikLaplace();
+template <class TYP, int ROZMIAR>
+Macierz<TYP, ROZMIAR> Macierz<TYP, ROZMIAR>::WyznacznikGauss() const{
 
-    if(det == 0){
-        std::cerr << "Blad: Macierz nieodwracalna!" << std::endl;
-        exit(1);
+    TYP wyzn;
+    Macierz<TYP, ROZMIAR> temp;
+    
+    temp = *this;
+
+    for(int i=0;i<ROZMIAR-1;i++){
+        for(int j=i+1;j<ROZMIAR;j++){
+            TYP p = temp[j][i];
+            for(int k=0;k<ROZMIAR;k++){
+                temp[j][k] -= (p / temp[i][i]) * temp[i][k];
+            }
+        }
     }
 
-    Macierz MacDop;
+    wyzn = 1;
+    for(int i=0;i<ROZMIAR;i++){
+        wyzn *= temp[i][i];
+    }
 
-    MacDop[0][0] = tab[1][1]*tab[2][2] - tab[1][2]*tab[2][1];
-    MacDop[0][1] = -(tab[1][0]*tab[2][2] - tab[1][2]*tab[2][0]);
-    MacDop[0][2] = tab[1][0]*tab[2][1] - tab[1][1]*tab[2][0];
-    MacDop[1][0] = -(tab[0][1]*tab[2][2] - tab[0][2]*tab[2][1]);
-    MacDop[1][1] = tab[0][0]*tab[2][2] - tab[0][2]*tab[2][0];       // Dopelnienia potrzebne do wzoru na odwrotnosc macierzy
-    MacDop[1][2] = -(tab[0][0]*tab[2][1] - tab[0][1]*tab[2][0]);
-    MacDop[2][0] = tab[0][1]*tab[1][2] - tab[0][2]*tab[1][1];
-    MacDop[2][1] = -(tab[0][0]*tab[1][2] - tab[1][0]*tab[0][2]);
-    MacDop[2][2] = tab[0][0]*tab[1][1] - tab[0][1]*tab[1][0];
+    return temp;
+}
 
-    MacDop = MacDop.Transpozycja();
+template <class TYP, int ROZMIAR>
+const Macierz<TYP, ROZMIAR> Macierz<TYP, ROZMIAR>::Odwrotnosc() const{
 
-    Macierz MacOdw;
+    Macierz<TYP, ROZMIAR> temp;
+    Macierz<TYP, ROZMIAR> I;
 
-    for(int i = 0; i < ROZMIAR; i++ )
-        for(int j = 0; j < ROZMIAR; j++){           // Zastosowanie wzoru na odwrotnosc macierzy
-            MacOdw[i][j] = (1/det)*MacDop[i][j];
+    for(int i=0;i<ROZMIAR;i++){
+        I[i][i] = 1;
+    }
+
+    temp = *this;
+
+    for(int i=0;i<ROZMIAR-1;i++){
+        for(int j=i+1;j<ROZMIAR;j++){
+            TYP p = temp[j][i]/temp[i][i];
+            for(int k=0;k<ROZMIAR;k++){
+
+                temp[j][k] -= p * temp[i][k];
+
+                I[j][k] -= p * I[i][k];
+
+
+            }
         }
+    }
 
-    return MacOdw;
+    for(int i=0;i<ROZMIAR;i++){
+        TYP p = temp[i][i];
+        for(int j=0;j<ROZMIAR;j++){
+            temp[i][j] = temp[i][j] / p;
+            I[i][j] = I[i][j] / p;
+        }
+    }
+
+    for(int i=ROZMIAR-1;i>0;i--){
+        for(int j=i-1;j>=0;j--){
+
+        TYP p = temp[j][i];
+
+            for(int k=ROZMIAR-1;k>=0;k--){
+
+                temp[j][k] -= p * temp[i][k];
+                I[j][k] -= p * I[i][k];
+
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    return I;
 }
 
 // Metoda przeciazajaca operator dodawaniua dwoch macierzy
 // Zwraca wynik dodawania macierzy
-Macierz Macierz::operator + (const Macierz & M) const{
+template <class TYP, int ROZMIAR>
+Macierz<TYP, ROZMIAR> Macierz<TYP, ROZMIAR>::operator + (const Macierz & M) const{
     
     Macierz wynik;
+
     for(int i=0;i<ROZMIAR;i++)
         for(int j=0;j<ROZMIAR;j++){
             wynik[i][j] = tab[i][j] + M[i][j];
@@ -99,13 +125,14 @@ Macierz Macierz::operator + (const Macierz & M) const{
 
 // Metoda przeciazajaca operator odejmwania macierzy z argumentu od macierzy z pola klasy
 // Zwraca wynik odejmowania
-Macierz Macierz::operator - (const Macierz & M) const{
+template <class TYP, int ROZMIAR>
+Macierz<TYP, ROZMIAR> Macierz<TYP, ROZMIAR>::operator - (const Macierz & M) const{
 
     Macierz wynik;
 
     for(int i=0; i<ROZMIAR; i++){
         for(int j=0; j<ROZMIAR; j++){
-            wynik.tab[i][j] = this->tab[i][j] - M.tab[i][j];
+            wynik.tab[i][j] = tab[i][j] - M[i][j];
         }
     }
     return wynik;
@@ -114,42 +141,59 @@ Macierz Macierz::operator - (const Macierz & M) const{
 
 // Metoda przeciazajaca operator mnozenia dla mnozenia macierzy przez macierz z argumentu
 // Zwraca wynik mnozenia macierzy przez macierz
-Macierz Macierz::operator * (const Macierz & M) const{
+template <class TYP, int ROZMIAR>
+Macierz<TYP, ROZMIAR> Macierz<TYP, ROZMIAR>::operator * (const Macierz & M) const{
+
     Macierz wynik;
-    for(int j=0;j<ROZMIAR;j++)
-        for(int i=0;i<ROZMIAR;i++){
-            wynik[i][j] = tab[i][0]*M[0][j]+tab[i][1]*M[1][j]+tab[i][2]*M[2][j];
+
+    for(int i=0;i<ROZMIAR;i++)
+        for(int j=0;j<ROZMIAR;j++){
+            for(int k=0;k<ROZMIAR;k++){
+            
+            wynik.tab[i][j] +=  tab[i][k] * M[k][j];
+            }
         }
     return wynik;
 }
 
-// Metoda przeciazajaca operator mnozenia dla mnozenia macierzy przez wektor
-// Zwraca wynizk mnozenia macierzy przez wektor
-Wektor Macierz::operator * (const Wektor & W) const{
 
-    Wektor wynik;
+template <class TYP, int ROZMIAR>
+Wektor<TYP, ROZMIAR> Macierz<TYP, ROZMIAR>::operator * (const Wektor<TYP, ROZMIAR> & W) const{
+
+    Wektor<TYP, ROZMIAR> wynik;
     for(int i=0;i<ROZMIAR;i++){
-        wynik[i] = tab[i][0]*W[0] + tab[i][1]*W[1] + tab[i][2]*W[2];
+        for(int j=0;j<ROZMIAR;j++){
+            wynik[i] += tab[i][j] * W[j];
+        }
     }
     return wynik;
 }
 
 // Przeciazenie operatora wyswietlania dla macierzy
 // Zwraca strumien wyjsciowy
-std::ostream& operator << (std::ostream &Strm, const Macierz &M)
+template <class TYP, int ROZMIAR>
+std::ostream& operator << (std::ostream &Strm, const Macierz<TYP, ROZMIAR> &M)
 {   
-    Macierz M1;
+    Macierz<TYP, ROZMIAR> M1;
     M1 = M.Transpozycja(); // Transponuje wyswietlana macierz (transpozycja wynika z zalozen zadania)
-    return Strm << M1[0] << std::endl << M1[1] << std::endl << M1[2] << std::endl;
+    
+    for(int i=0;i<ROZMIAR;i++){
+        Strm << M1[i] << std::endl;
+    }    
+
+    return Strm;
 }
 
 // Przeciazenie operatora wczytywania dla macierzy
 // Zwraca strumien wejsciowy
-std::istream& operator >> (std::istream &Strm, Macierz &M)
+template <class TYP, int ROZMIAR>
+std::istream& operator >> (std::istream &Strm, Macierz<TYP, ROZMIAR> &M)
 {
-    Strm >> M[0] >> M[1] >> M[2];
-    M.Transpozycja(); // Transponuje wczytana macierz (transpozycja wynika z zalozen zadania)
+    
+    for(int i=0;i<ROZMIAR;i++){
+        Strm >> M[i];
+    }
+    M = M.Transpozycja(); // Transponuje wczytana macierz (transpozycja wynika z zalozen zadania)
     return Strm;
 }
 
-*/

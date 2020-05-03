@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <math.h>
+#include "LZespolona.hh"
 
 // Klasa wektora, przechowuje pole tablicy jednowymiarowej o okreslonej w ROZMIAR ilosci elementow
 // Deklaruje metody operujace na tej tablicy
@@ -48,14 +49,15 @@ class Wektor {
 // Metoda przeciazajaca operator mnozenia dla mnozenia wektora z klasy oraz podane jako argument (mnozenie skalarne)
     TYP operator * (const Wektor & W2) const;
 
+    Wektor operator / (const double & d) const;
+
 /******************************************
 
 // Metoda obliczajaca dlugosc wektora
     double dlugosc() const{
       return sqrt(pow(tab[0], 2) + pow(tab[1], 2) + pow(tab[2], 2));
     }
-
-
+    
 *******************************************/
 };
 

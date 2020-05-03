@@ -1,5 +1,4 @@
 #include "Wektor.hh"
-#include "LZespolona.hh"
 
 template class Wektor<double,5>;
 template std::istream & operator >> (std::istream & Strm, Wektor<double, 5> & k);
@@ -53,6 +52,17 @@ TYP Wektor<TYP, ROZMIAR>::operator * (const Wektor & W2) const{
         a += tab[i] * W2[i];
     }
     return a;
+}
+
+template <class TYP, int ROZMIAR>
+Wektor<TYP, ROZMIAR> Wektor<TYP, ROZMIAR>::operator / (const double & d) const{
+
+    Wektor<TYP, ROZMIAR> wynik;
+    for(int i=0; i<ROZMIAR; i++){
+        wynik[i] = wynik[i] / d;
+    }
+
+    return wynik;
 }
 
 // Przeciazenie operatora wczytywania wektora

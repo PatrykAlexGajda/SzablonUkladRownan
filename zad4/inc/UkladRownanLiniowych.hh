@@ -1,5 +1,3 @@
-/*
-
 #ifndef UKLADROWNANLINIOWYCH_HH
 #define UKLADROWNANLINIOWYCH_HH
 
@@ -8,63 +6,59 @@
 
 // Klasa ukladu rownan liniowych, przechowuje macierz glowna ukladu oraz wektor wyrazow wolnych
 // Deklaruje metody operujace na polach tej klasy 
-
+template <class TYP, int ROZMIAR>
 class UkladRownanLiniowych {
 
-  Macierz A;
-  Wektor b;
+  Macierz<TYP, ROZMIAR> A;
+  Wektor<TYP, ROZMIAR> b;
 
 public:
 
 // Konstruktor tworzacy pola wyzerowanej macierzy oraz wyzerowanego wektora
   UkladRownanLiniowych(){ 
-    Macierz A();
-    Wektor b();  
+    Macierz<TYP, ROZMIAR> A();
+    Wektor<TYP, ROZMIAR> b();  
   }
 
 // Konstruktor podstawiajacy wczytane dane do pol odpowiednich pol klasy
-  UkladRownanLiniowych(Macierz AA, Wektor bb) : A(AA), b(bb){ 
+  UkladRownanLiniowych(Macierz<TYP, ROZMIAR> AA, Wektor<TYP, ROZMIAR> bb) : A(AA), b(bb){ 
     A = AA;
     b = bb;
   }
 
 // Daje dostep do macierzy poza metodami klasy
-  const Macierz & get_A() const{ 
+  const Macierz<TYP, ROZMIAR> & get_A() const{ 
     return A;
   }
 
 // Daje dostep do wektora poza metodami klasy
-  const Wektor & get_b() const{
+  const Wektor<TYP, ROZMIAR> & get_b() const{
     return b;
   }
 
 // Daje mozliwosc podstawienia wczytanej macierzy pod pole w klasie
-  void set_A(const Macierz & AA){
+  void set_A(const Macierz<TYP, ROZMIAR> & AA){
     A=AA;    
   }
 
 // Daje mozliwosc podstawienia wczytanego wektora pod pole w klasie
-  void set_b(const Wektor & bb){
+  void set_b(const Wektor<TYP, ROZMIAR> & bb){
     b=bb;
   }
 
 // Deklaracja metody wyliczajacej niewiadome ukladu rownan
-  Wektor Oblicz() const;
-
-// Deklaracja metody obliczajacej wektor bledu
-  Wektor WektorBledu() const;
-
-// Deklaracja metody obliczajace dlugosc wektora bledu
-  double MiaraBledu() const;
+  Wektor<TYP, ROZMIAR> Oblicz() const;
 };
 
 // Deklaracja przeciazenia operatora wczytywania ukladu rownan
-std::istream & operator >> (std::istream &strm, UkladRownanLiniowych &UklRown);
+template <class TYP, int ROZMIAR>
+std::istream & operator >> (std::istream &strm, UkladRownanLiniowych<TYP, ROZMIAR> &UklRown);
 
 // Deklaracja przeciazenia operatora wyswietlania ukladu rownan
-std::ostream & operator << ( std::ostream &strm, const UkladRownanLiniowych &UklRown);
+template <class TYP, int ROZMIAR>
+std::ostream & operator << ( std::ostream &strm, const UkladRownanLiniowych<TYP, ROZMIAR> &UklRown);
 
 #endif
 
-*/
+
 

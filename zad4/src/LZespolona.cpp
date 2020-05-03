@@ -2,27 +2,42 @@
 #include <iostream>
 #include <math.h>
 
-LZespolona LZespolona::operator=(double a)
+LZespolona LZespolona::operator = (double a)
 {
   re = a;
   im = 0;
   return *this;
 }
 
-LZespolona LZespolona::operator+=(LZespolona Skl)
+LZespolona LZespolona::operator += (LZespolona Skl)
 {
 
   re = re + Skl.re;
   im = im + Skl.im;
-
-  return Skl;
+  return *this;
 }
 
-LZespolona LZespolona::operator*(double r)
-{
-  re = re * r;
-  im = im * r;
+LZespolona LZespolona::operator -= (LZespolona Skl){
+
+  re = re - Skl.re;
+  im = im - Skl.im;
   return *this;
+}
+
+LZespolona LZespolona::operator * (double r) const
+{
+  LZespolona wynik;
+  wynik.re = re * r;
+  wynik.im = im * r;
+  return wynik;
+}
+
+LZespolona LZespolona::operator *= (LZespolona Skl){
+
+  re = re * Skl.re;
+  im = im * Skl.im;
+  return *this;
+
 }
 
 /* Funkcja tworzy liczbe zespolona wczytujac do struktury dwie liczby rzeczywiste: czesc rzeczywista i zespolona. 

@@ -20,9 +20,12 @@ public:
     im = 0;
   }
 
-  LZespolona operator=(double a);
-  LZespolona operator+=(LZespolona Skl);
-  LZespolona operator*(double r);
+  LZespolona operator = (double a);
+  LZespolona operator += (LZespolona Skl);
+  LZespolona operator -= (LZespolona Skl);
+  LZespolona operator * (double r) const;
+  LZespolona operator *= (LZespolona Skl);
+
 };
 
 /* Naglowki funkcji dzialajacych na liczbach zespolonych
