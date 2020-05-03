@@ -17,9 +17,6 @@ class Macierz {
 // Konstruktor zerujacy elementy macierzy
     Macierz(); 
 
-// konstruktor podstawiacy pod kolejne wiersze macierzy wektory z argumentow
-    Macierz(Wektor<TYP, ROZMIAR> W1, Wektor<TYP, ROZMIAR> W2, Wektor<TYP, ROZMIAR> W3);
-
 // Przeciazenie operatora indeksujacego [], pozwala dostac sie do konkretnego elementu lub wektora z macierzy (stale wartosci)
     const Wektor<TYP, ROZMIAR> & operator[] (int indeks) const{
       return tab[indeks];
@@ -27,12 +24,10 @@ class Macierz {
 
 // -||- (niestale)
     Wektor<TYP, ROZMIAR> & operator[] (int indeks){
-
     if (indeks < 0 || indeks >= ROZMIAR) { // Blad w przypadku podania zlego indeksu
       std::cerr << "BLAD: Zly indeks macierzy."; 
       exit(1);
     }    
-
     return tab[indeks];
     }
 
@@ -43,19 +38,17 @@ class Macierz {
 
 // -||- (niestale)
     TYP & operator() (int ind1, int ind2){
-
     if (ind1 < 0 || ind1 >= ROZMIAR || ind2 < 0 || ind2 >= ROZMIAR) { // Blad w przypadku podania zlych indeksow
         std::cerr << "BLAD: Zle indeksy macierzy."; 
         exit(1);
     }
-
     return tab[ind1][ind2];
     }
 
 // Deklaracja metody transponujacej macierz
     const Macierz Transpozycja() const;
 // Deklaracja metody wyliczajacej wyznacznik macierzy (metoda Laplace'a)
-    Macierz WyznacznikGauss() const;
+    TYP WyznacznikGauss() const;
 // Deklaracja metody odwracajacej macierz
     const Macierz Odwrotnosc() const;
 

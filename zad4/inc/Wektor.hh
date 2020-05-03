@@ -22,43 +22,19 @@ class Wektor {
       }
     }
 
-// Konstruktor podstawiajacy pod kolejne elementy wartosci z argumentow
-    Wektor(double a, double b){
-      tab[0]=a, tab[1]=b;
-    }
-
-// Konstruktor podstawiajacy pod kolejne elementy wartosci z argumentow
-    Wektor(double a, double b, double c, double d, double e){
-      tab[0]=a, tab[1]=b, tab[2]=c; tab[3]=d, tab[4]=e;
+// Metoda przeciazajaca operator indeksowania dla dotepu do elementow tablicy wektora (stale wartosci)
+    const TYP & operator[] (int indeks) const{
+      return tab[indeks];
     }
 
 // Deklaracja metody przeciazajacej operator indeksowania
     TYP & operator[] (int indeks);
 
-// Metoda przeciazajaca operator indeksowania dla dotepu do elementow tablicy wektora (stale wartosci)
-    const TYP & operator[] (int indeks) const{
-      return tab[indeks];
-    }
-    
-// Deklaracja metody przeciazajacej operator dodawania
+// Naglowki przeciazen operatorow dzialajacych na wektorze
     Wektor operator + (const Wektor & W2) const;
-  
-// Deklaracja metody przeciazajacej operator odejmowania
     Wektor operator - (const Wektor & W2) const;
-
-// Metoda przeciazajaca operator mnozenia dla mnozenia wektora z klasy oraz podane jako argument (mnozenie skalarne)
     TYP operator * (const Wektor & W2) const;
-
     Wektor operator / (const double & d) const;
-
-/******************************************
-
-// Metoda obliczajaca dlugosc wektora
-    double dlugosc() const{
-      return sqrt(pow(tab[0], 2) + pow(tab[1], 2) + pow(tab[2], 2));
-    }
-    
-*******************************************/
 };
 
 // Deklaracja przeciazenia operatora wczytywania dlawektora

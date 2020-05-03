@@ -7,8 +7,6 @@ template class Wektor<LZespolona,5>;
 template std::istream & operator >> (std::istream & Strm, Wektor<LZespolona, 5> & k);
 template std::ostream & operator << (std::ostream & Strm, const Wektor<LZespolona, 5> & k);
 
-
-
 //Metoda zezwala na dostep do elementu indeks tablicy wektora
 template <class TYP, int ROZMIAR>
 TYP & Wektor<TYP, ROZMIAR>::operator[] (int indeks) {
@@ -43,6 +41,8 @@ Wektor<TYP, ROZMIAR> Wektor<TYP, ROZMIAR>::operator - (const Wektor & W2) const{
     return wynik;
 }
 
+// Metoda przeciaza operator * dla wektorow (mnozenie skalarne)
+// Zwraca nowa zmienna z wynikiem mnozenia
 template <class TYP, int ROZMIAR>
 TYP Wektor<TYP, ROZMIAR>::operator * (const Wektor & W2) const{
 
@@ -54,15 +54,22 @@ TYP Wektor<TYP, ROZMIAR>::operator * (const Wektor & W2) const{
     return a;
 }
 
+// Metoda przeciaza operator / dla dzielenia wektora przez rzeczywista
+// zwraca nowy wektor
 template <class TYP, int ROZMIAR>
 Wektor<TYP, ROZMIAR> Wektor<TYP, ROZMIAR>::operator / (const double & d) const{
 
     Wektor<TYP, ROZMIAR> wynik;
-    for(int i=0; i<ROZMIAR; i++){
-        wynik[i] = wynik[i] / d;
-    }
 
+    if(d == 0){
+        std::cerr << "BLAD: Proba dzielenia przez zero!" << std::endl;
+        return wynik;
+    } else {
+        for(int i=0; i<ROZMIAR; i++){
+            wynik[i] = wynik[i] / d;
+        }
     return wynik;
+    }
 }
 
 // Przeciazenie operatora wczytywania wektora

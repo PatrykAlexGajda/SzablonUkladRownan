@@ -2,6 +2,8 @@
 #include <iostream>
 #include <math.h>
 
+// Metoda podstawia pod liczbe zespolona liczbe z argumentu (przypadek liczby rzeczywistej)
+// Zwraca powstala zespolona
 LZespolona LZespolona::operator = (double a)
 {
   re = a;
@@ -9,6 +11,8 @@ LZespolona LZespolona::operator = (double a)
   return *this;
 }
 
+// Metoda przeciaza operator += dla Zespolonych
+// Zwraca powstala zespolona
 LZespolona LZespolona::operator += (LZespolona Skl)
 {
 
@@ -17,6 +21,8 @@ LZespolona LZespolona::operator += (LZespolona Skl)
   return *this;
 }
 
+// Metoda przeciaza operator -= dla Zespolonych
+// Zwraca powstala zespolona
 LZespolona LZespolona::operator -= (LZespolona Skl){
 
   re = re - Skl.re;
@@ -24,6 +30,8 @@ LZespolona LZespolona::operator -= (LZespolona Skl){
   return *this;
 }
 
+// Metoda przeciaza operator += dla Zespolonych
+// Zwraca nowa zespolona
 LZespolona LZespolona::operator * (double r) const
 {
   LZespolona wynik;
@@ -32,12 +40,13 @@ LZespolona LZespolona::operator * (double r) const
   return wynik;
 }
 
+// Metoda przeciaza operator *= dla Zespolonych
+// Zwraca powstala zespolona
 LZespolona LZespolona::operator *= (LZespolona Skl){
 
   re = re * Skl.re;
   im = im * Skl.im;
   return *this;
-
 }
 
 /* Funkcja tworzy liczbe zespolona wczytujac do struktury dwie liczby rzeczywiste: czesc rzeczywista i zespolona. 
@@ -210,4 +219,15 @@ bool operator!=(LZespolona Skl1, LZespolona Skl2)
 {
 
   return !(Skl1 == Skl2);
+}
+
+// Przeciaza == dla porownania zespolonej z rzeczywista (do obslugi bledow)
+// zwraca true lub false
+bool operator==(LZespolona Skl1, double d){
+
+  if((Skl1.re == d) && (Skl1.im == d)){
+    return true;
+  } else {
+    return false;
+  }
 }
